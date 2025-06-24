@@ -1,9 +1,9 @@
-package controller;
+package com.example.shoppringback.controller;
 
 
-import entity.Item;
+import com.example.shoppringback.entity.Item;
 import org.springframework.web.bind.annotation.*;
-import repository.ItemRepository;
+import com.example.shoppringback.repository.ItemRepository;
 
 import java.util.List;
 
@@ -25,6 +25,11 @@ public class ItemController {
     @PostMapping
     public Item create(@RequestBody Item item) {
         return repo.save(item);
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "Test OK";
     }
 }
 

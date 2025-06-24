@@ -1,6 +1,6 @@
-package repository;
+package com.example.shoppringback.repository;
 
-import entity.Item;
+import com.example.shoppringback.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
