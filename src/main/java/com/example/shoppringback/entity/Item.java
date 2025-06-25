@@ -3,7 +3,7 @@ package com.example.shoppringback.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -14,8 +14,8 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime createdAt;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
     @Column(name = "item_name", nullable = false)
     private String itemName;
@@ -31,7 +31,7 @@ public class Item {
     @PrePersist
     public void prePersist() {
         if (createdAt == null) {
-            createdAt = ZonedDateTime.now();
+            createdAt = LocalDateTime.now();
         }
     }
 }
