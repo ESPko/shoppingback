@@ -41,4 +41,6 @@ public class BoardController {
     public void deleteBoard(@PathVariable Long id) {
         boardService.delete(id);
     }
+
+
 }
