@@ -78,6 +78,8 @@ public class OAuthClient {
                 String.class
         );
 
+        System.out.println(response.getBody());
+
         try {
             return objectMapper.readValue(response.getBody(), KakaoProfile.class);
         } catch (Exception e) {
