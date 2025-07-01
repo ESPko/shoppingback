@@ -54,6 +54,7 @@ public class OAuthController {
 
     @GetMapping("/naver")
     public ResponseEntity<?> naverLogin(@RequestParam String code, @RequestParam String state) {
+        System.out.println("ㅋㅋㄴㅇㅁㅇㅁㄴㅇ");
         try {
             // 1. 액세스 토큰 요청
             String accessToken = oAuthClient.getNaverAccessToken(code, state);
