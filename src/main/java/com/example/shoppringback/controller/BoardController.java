@@ -1,13 +1,10 @@
 package com.example.shoppringback.controller;
 
-import com.example.shoppringback.entity.Board;
-import com.example.shoppringback.repository.BoardRepository;
+import com.example.shoppringback.entity.QnA;
 import com.example.shoppringback.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/board")
@@ -18,23 +15,23 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
-    public List<Board> getAllBoards() {
+    public List<QnA> getAllBoards() {
         return boardService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Board getBoard(@PathVariable Long id) {
+    public QnA getBoard(@PathVariable Long id) {
         return boardService.findById(id);
     }
 
     @PostMapping
-    public Board createBoard(@RequestBody Board board) {
-        return boardService.save(board);
+    public QnA createBoard(@RequestBody QnA qnA) {
+        return boardService.save(qnA);
     }
 
     @PutMapping("/{id}")
-    public Board updateBoard(@PathVariable Long id, @RequestBody Board board) {
-        return boardService.update(id, board);
+    public QnA updateBoard(@PathVariable Long id, @RequestBody QnA qnA) {
+        return boardService.update(id, qnA);
     }
 
     @DeleteMapping("/{id}")

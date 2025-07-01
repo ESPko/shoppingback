@@ -1,7 +1,7 @@
 package com.example.shoppringback.service;
 
-import com.example.shoppringback.entity.Board;
-import com.example.shoppringback.repository.BoardRepository;
+import com.example.shoppringback.entity.QnA;
+import com.example.shoppringback.repository.QnaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,31 +11,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final BoardRepository boardRepository;
+    private final QnaRepository qnaRepository;
 
-    public List<Board> findAll() {
-        return boardRepository.findAll();
+    public List<QnA> findAll() {
+        return qnaRepository.findAll();
     }
 
-    public Board findById(Long id) {
-        return boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("게시물 없음"));
+    public QnA findById(Long id) {
+        return qnaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("게시물 없음"));
     }
 
-    public Board save(Board board) {
-        return boardRepository.save(board);
+    public QnA save(QnA qnA) {
+        return qnaRepository.save(qnA);
     }
 
-    public Board update(Long id, Board updatedBoard) {
-        Board existing = findById(id);
-        existing.setTitle(updatedBoard.getTitle());
-        existing.setProduct(updatedBoard.getProduct());
-        existing.setName(updatedBoard.getName());
-        existing.setDate(updatedBoard.getDate());
-        existing.setHit(updatedBoard.getHit());
-        return boardRepository.save(existing);
+    public QnA update(Long id, QnA updatedQnA) {
+        QnA existing = findById(id);
+        existing.setTitle(updatedQnA.getTitle());
+        existing.setProduct(updatedQnA.getProduct());
+        existing.setName(updatedQnA.getName());
+        existing.setDate(updatedQnA.getDate());
+        existing.setHit(updatedQnA.getHit());
+        return qnaRepository.save(existing);
     }
 
     public void delete(Long id) {
-        boardRepository.deleteById(id);
+        qnaRepository.deleteById(id);
     }
 }

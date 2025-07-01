@@ -5,13 +5,13 @@ import lombok.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "board")
+@Table(name = "qna")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Board {
+public class QnA {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
