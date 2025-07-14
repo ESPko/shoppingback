@@ -11,14 +11,20 @@ import java.time.format.DateTimeFormatter;
 
 @Data
 @Entity
-@Table(name = "users") // user는 예약어일 수 있어서 users 추천
+@Table(name = "users") // user는 예약어라 users 추천
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String provider; // "kakao", "google" 등
-    private String providerId; // 카카오에서 받은 고유 ID
+    @Column(unique = true, nullable = false)
+    private String userId;      // 일반 로그인용 아이디
+
+    private String password;    // 비밀번호
+
+    private String provider;    // "kakao", "google" 등
+    private String providerId;  // 카카오에서 받은 고유 ID
+
     private String email;
     private String nickname;
     private String profileImage;
@@ -31,10 +37,15 @@ public class User {
     private String birthdayType; // 예: "SOLAR"
     private boolean isLeapMonth; // 윤달 여부
 
+    private String zipCode;
+    private String address1;
+    private String address2;
+
+    private String mobile;
+    private String smsReceive;
+    private String emailReceive;
 
     private String role = "USER"; // 기본 권한
-
-    // 추가로 필요한 필드: 가입일자, 수정일자, 주소, 전화번호 등
 
     @Column(name = "created_at", nullable = false, length = 8)
     private String createdAt;
@@ -53,6 +64,4 @@ public class User {
     public void preUpdate() {
         updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
     }
-
-    // getters and setters 생략
 }
