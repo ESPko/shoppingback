@@ -1,7 +1,9 @@
 package com.example.shoppringback.controller;
 
+import com.example.shoppringback.dto.*;
 import com.example.shoppringback.entity.Cart;
 import com.example.shoppringback.entity.CartItem;
+import com.example.shoppringback.repository.ProductRepository;
 import com.example.shoppringback.service.CartService;
 import lombok.*;
 
@@ -16,12 +18,19 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
+    private final ProductRepository productRepository;
 
     // 장바구니 조회
     @GetMapping("/{userId}")
     public ResponseEntity<CartResponse> getCart(@PathVariable Long userId) {
         Cart cart = cartService.getCartByUserId(userId);
-        return ResponseEntity.ok(new CartResponse(cart));
+        if (cart == null) {
+            return ResponseEntity.notFound().build();  // 장바구니가 없으면 404 Not Found
+        }
+
+        // CartResponse 생성
+        CartResponse cartResponse = new CartResponse(cart, productRepository);
+        return ResponseEntity.ok(cartResponse);
     }
 
     // 상품 추가
@@ -30,6 +39,9 @@ public class CartController {
             @PathVariable Long userId,
             @RequestBody AddItemRequest request
     ) {
+        System.out.println("addItem called with productId = " + request.getProductId());
+        System.out.println("quantity = " + request.getQuantity());
+        System.out.println("selectedSize = " + request.getSelectedSize());
         cartService.addItemToCart(userId, request.getProductId(), request.getQuantity(), request.getSelectedSize());
         return ResponseEntity.ok().build();
     }
@@ -60,57 +72,6 @@ public class CartController {
         cartService.removeItem(cartItemId);
         return ResponseEntity.ok().build();
     }
-
-
-    // DTO & Request 클래스들
-
-    @Getter
-    static class CartResponse {
-        private Long id;
-        private Long userId;
-        private List<CartItemResponse> items;
-
-        public CartResponse(Cart cart) {
-            this.id = cart.getId();
-            this.userId = cart.getUserId();
-            this.items = cart.getCartItems().stream()
-                    .map(CartItemResponse::new)
-                    .toList();
-        }
-    }
-
-    @Getter
-    static class CartItemResponse {
-        private Long id;
-        private Long productId;
-        private int quantity;
-        private String selectedSize;
-        private boolean selected;
-
-        public CartItemResponse(CartItem item) {
-            this.id = item.getId();
-            this.productId = item.getProductId();
-            this.quantity = item.getQuantity();
-            this.selectedSize = item.getSelectedSize();
-            this.selected = item.isSelected();
-        }
-    }
-
-    @Getter
-    static class AddItemRequest {
-        private Long productId;
-        private int quantity;
-        private String selectedSize;
-    }
-
-    @Getter
-    static class ChangeQuantityRequest {
-        private int quantityDiff;
-    }
-
-    @Getter
-    static class ChangeSizeRequest {
-        private String newSize;
-    }
 }
+
 
