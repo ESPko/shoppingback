@@ -3,17 +3,16 @@ package com.example.shoppringback.controller;
 import com.example.shoppringback.dto.*;
 import com.example.shoppringback.entity.Cart;
 import com.example.shoppringback.entity.CartItem;
+import com.example.shoppringback.entity.Product;
 import com.example.shoppringback.repository.ProductRepository;
 import com.example.shoppringback.service.CartService;
-import lombok.*;
-
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("/api/cart")  // 기본 경로 설정
 @RequiredArgsConstructor
 public class CartController {
 
@@ -33,45 +32,78 @@ public class CartController {
         return ResponseEntity.ok(cartResponse);
     }
 
-    // 상품 추가
+    // 상품 추가 (POST)
     @PostMapping("/{userId}/item")
-    public ResponseEntity<Void> addItem(
+    public ResponseEntity<CartItemResponse> addItem(
             @PathVariable Long userId,
             @RequestBody AddItemRequest request
     ) {
+        System.out.println("Request Body: " + request);
+
+        // 필수 값 체크
+        if (request.getProductId() == null || request.getQuantity() <= 0 || request.getSelectedSize() == null) {
+            return ResponseEntity.badRequest().body(null);  // 잘못된 요청 처리
+        }
+
         System.out.println("addItem called with productId = " + request.getProductId());
         System.out.println("quantity = " + request.getQuantity());
         System.out.println("selectedSize = " + request.getSelectedSize());
-        cartService.addItemToCart(userId, request.getProductId(), request.getQuantity(), request.getSelectedSize());
-        return ResponseEntity.ok().build();
+
+        // 장바구니에 아이템 추가 서비스 호출
+        CartItem cartItem = cartService.addItemToCart(userId, request.getProductId(), request.getQuantity(), request.getSelectedSize());
+
+        // 상품 정보를 사용해 CartItemResponse 생성
+        Product product = productRepository.findById(cartItem.getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // CartItemResponse 생성
+        CartItemResponse response = new CartItemResponse(cartItem, product);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);  // 추가된 아이템 반환
     }
 
-    // 수량 변경
-    @PutMapping("/item/{cartItemId}/quantity")
-    public ResponseEntity<Void> changeQuantity(
+
+
+
+    // 수량 변경 (PUT)
+    @PutMapping("/{userId}/item/{cartItemId}")
+    public ResponseEntity<CartItemResponse> changeQuantity(
+            @PathVariable Long userId,
             @PathVariable Long cartItemId,
             @RequestBody ChangeQuantityRequest request
     ) {
-        cartService.changeQuantity(cartItemId, request.getQuantityDiff());
-        return ResponseEntity.ok().build();
+        CartItemResponse updatedItem = cartService.changeQuantity(cartItemId, request.getQuantityDiff());
+
+        if (updatedItem == null) {
+            return ResponseEntity.noContent().build();  // 수량이 0 이하일 경우 삭제된 항목 처리
+        }
+
+        return ResponseEntity.ok(updatedItem);  // 변경된 아이템 반환
     }
 
-    // 옵션 변경
-    @PutMapping("/item/{cartItemId}/size")
-    public ResponseEntity<Void> changeSize(
+
+    // 사이즈 변경 (PUT)
+    @PutMapping("/{userId}/item/{cartItemId}/size")
+    public ResponseEntity<CartItemResponse> changeSize(
+            @PathVariable Long userId,
             @PathVariable Long cartItemId,
             @RequestBody ChangeSizeRequest request
     ) {
-        cartService.changeSize(cartItemId, request.getNewSize());
-        return ResponseEntity.ok().build();
+        // 사이즈 변경 처리 후 변경된 CartItemResponse 반환
+        CartItemResponse updatedItem = cartService.changeSize(cartItemId, request.getNewSize());
+
+        // 변경된 CartItemResponse만 응답으로 반환
+        return ResponseEntity.ok(updatedItem);
     }
 
-    // 아이템 삭제
-    @DeleteMapping("/item/{cartItemId}")
-    public ResponseEntity<Void> removeItem(@PathVariable Long cartItemId) {
+
+    // 아이템 삭제 (DELETE)
+    @DeleteMapping("/{userId}/item/{cartItemId}")
+    public ResponseEntity<Void> removeItem(
+            @PathVariable Long userId,
+            @PathVariable Long cartItemId
+    ) {
         cartService.removeItem(cartItemId);
         return ResponseEntity.ok().build();
     }
 }
-
-

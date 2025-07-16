@@ -10,7 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CartItemResponse {
-
     @JsonProperty("id")
     private Long id;
 
@@ -30,6 +29,8 @@ public class CartItemResponse {
 
     private String infoImage;
 
+    private String name; // 상품 이름 추가
+
     // CartItem을 인자로 받는 생성자
     public CartItemResponse(CartItem item, Product product) {
         this.id = item.getId();
@@ -37,7 +38,9 @@ public class CartItemResponse {
         this.quantity = item.getQuantity();
         this.selectedSize = item.getSelectedSize();
         this.selected = item.isSelected();
-        this.price = product.getPrice();  // or product.getPrice()
+        this.price = product.getPrice();  // 가격
         this.infoImage = product.getInfoImage();
+        this.name = product.getName();  // 상품 이름
     }
 }
+
