@@ -42,5 +42,8 @@ public class Product {
 
     @Column(name = "product_cate")
     private String category;
+
+    @Column(name = "product_type")
+    private String type;
 }
 
