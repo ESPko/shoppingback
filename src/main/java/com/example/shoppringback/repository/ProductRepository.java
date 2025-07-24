@@ -12,5 +12,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findTop4ByTypeOrderByIdDesc(String type);
     List<Product> findByTypeAndCategory(String type, String category);
     List<Product> findByCategory(String category);
+
+    List<Product> findByNameContainingIgnoreCase(String keyword);
 }
 

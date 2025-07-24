@@ -68,4 +68,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductsByType("medium"));
     }
 
+
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam("q") String keyword) {
+        return productService.searchProducts(keyword);
+    }
 }
