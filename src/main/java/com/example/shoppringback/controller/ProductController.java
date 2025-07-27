@@ -68,9 +68,14 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductsByType("medium"));
     }
 
-
     @GetMapping("/search")
     public List<Product> searchProducts(@RequestParam("q") String keyword) {
         return productService.searchProducts(keyword);
+    }
+    // 키워드 아이템 리스트 product cate값 기준 검색
+    @GetMapping("/by-category")
+    public ResponseEntity<List<Product>> getProductsByCategoryOnly(@RequestParam String cate) {
+        List<Product> products = productService.getProductsByCategoryOnly(cate);
+        return ResponseEntity.ok(products);
     }
 }
