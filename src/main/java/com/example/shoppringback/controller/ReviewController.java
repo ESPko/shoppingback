@@ -79,7 +79,7 @@ public class ReviewController {
     }
     // 리뷰 목록 조회 (페이징 처리)
     @GetMapping("/paged")
-    public List<Review> getPagedReviews(@RequestParam int page, @RequestParam int size) {
+    public List<Review> getPagedReviews(@RequestParam int page, @RequestParam    int size) {
         return reviewService.getReviews(page, size);
     }
 }
