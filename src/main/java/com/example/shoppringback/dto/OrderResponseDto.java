@@ -3,13 +3,18 @@ package com.example.shoppringback.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderRequestDto {
+@Builder
+public class OrderResponseDto {
+
+    @JsonProperty("orderId")
+    private Long orderId;
 
     @JsonProperty("receiverName")
     private String receiverName;
@@ -29,6 +34,15 @@ public class OrderRequestDto {
     @JsonProperty("deliveryMessage")
     private String deliveryMessage;
 
+    @JsonProperty("status")
+    private String status;
+
+    @JsonProperty("orderDate")
+    private LocalDateTime orderDate;
+
+    @JsonProperty("totalPayAmount")
+    private int totalPayAmount; // 필드 꼭 필요
+
     @JsonProperty("items")
-    private List<OrderItemDto> items;
+    private List<OrderItemResponseDto> items;
 }
